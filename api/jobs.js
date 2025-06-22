@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { ulid } from 'ulid';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -25,10 +26,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Transcript exceeds 15,000 words.' });
     }
 
+    // Generate a ULID for the job id
+    const jobId = ulid();
+
     // Create job
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .insert([{ title, language, state: 'queued', word_count: wordCount }])
+      .insert([{ id: jobId, title, language, state: 'queued', word_count: wordCount }])
       .select()
       .single();
 
@@ -39,13 +43,13 @@ export default async function handler(req, res) {
     // Create transcript
     const { error: transcriptError } = await supabase
       .from('transcripts')
-      .insert([{ job_id: job.id, text_md, word_count: wordCount }]);
+      .insert([{ job_id: jobId, text_md, word_count: wordCount }]);
 
     if (transcriptError) {
       return res.status(500).json({ error: transcriptError.message });
     }
 
-    return res.status(201).json({ job_id: job.id });
+    return res.status(201).json({ job_id: jobId });
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Unknown error' });
   }
