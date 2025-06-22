@@ -1,2 +1,4 @@
 # Ignore secrets
 documentation/secrets/
+
+.env
