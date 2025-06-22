@@ -51,4 +51,36 @@ CREATE TABLE jobs (
 );
 
 -- transcript + generated assets ---------------------------
-CREATE TABLE tran
+--
+-- The `transcripts` table stores the full transcript text (`text_md`) and related
+-- assets for each job. It is linked to the `jobs` table by `job_id` (1:1 relationship).
+-- The `text_md` field is of type TEXT and can store up to 2MB per transcript.
+-- This separation keeps the `jobs` table lean and allows for scalable content storage.
+--
+CREATE TABLE transcripts (
+  job_id      TEXT PRIMARY KEY REFERENCES jobs(id) ON DELETE CASCADE,
+  text_md     TEXT NOT NULL,
+  faq_json    TEXT,           -- JSON array of { q, a }
+  seo_score   REAL,           -- 0-1 helpful-content heuristic
+  word_count  INTEGER,
+  ready_at    INTEGER
+);
+
+-- publish metadata ----------------------------------------
+CREATE TABLE cms_posts (
+  id            TEXT PRIMARY KEY,
+  job_id        TEXT NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+  cms_type      TEXT CHECK(cms_type IN ('wordpress','ghost','markdown')),
+  cms_post_id   TEXT,
+  publish_url   TEXT,
+  published_at  INTEGER
+);
+
+-- metered usage (by WORDS) --------------------------------
+CREATE TABLE usage_events (
+  id        INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,,
+  org_id    TEXT NOT NULL REFERENCES organisations(id),
+  job_id    TEXT NOT NULL,
+  words     INTEGER NOT NULL,
+  event_ts  INTEGER NOT NULL          -- epoch seconds
+);
