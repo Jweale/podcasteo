@@ -1,5 +1,5 @@
 'use server';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -8,8 +8,8 @@ const supabase = createClient(
 );
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: Request,
+  { params }
 ) {
   const jobId = params.id;
   console.log(`[Transcript API] GET request for jobId: ${jobId}`);
