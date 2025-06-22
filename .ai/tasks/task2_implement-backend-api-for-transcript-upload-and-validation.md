@@ -1,15 +1,15 @@
 ---
 id: 2
 title: Implement Backend API for Transcript Upload and Validation
-status: inprogress
+status: completed
 priority: critical
 feature: Transcript Upload
 dependencies:
   - 1
-assigned_agent: cursor
+assigned_agent: null
 created_at: "2025-06-22T15:39:28Z"
 started_at: "2025-06-22T15:55:57Z"
-completed_at: null
+completed_at: "2025-06-22T16:27:12Z"
 error_log: null
 ---
 
