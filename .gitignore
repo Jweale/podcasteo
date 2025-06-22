@@ -9,6 +9,8 @@ build/
 .cache/
 .turbo/
 .output/
+node_modules/
+
 
 # misc
 .DS_Store
