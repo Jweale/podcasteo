@@ -11,11 +11,11 @@
 > Dependencies: 2
 > Build the UI components for drag-and-drop file upload and plain-text paste, including a real-time word counter and error messaging.
 
-- [ ] **ID 4: Integrate Frontend with Backend API** (Priority: high)
+- [x] **ID 4: Integrate Frontend with Backend API** (Priority: high)
 > Dependencies: 2, 3
 > Connect the frontend upload UI to the backend API, ensuring correct payload structure and error handling.
 
-- [ ] **ID 5: Implement Transcript Retrieval Endpoint** (Priority: medium)
+- [x] **ID 5: Implement Transcript Retrieval Endpoint** (Priority: medium)
 > Dependencies: 2
 > Create the `GET /jobs/{id}/transcript` endpoint to allow retrieval of stored transcripts from the `transcripts` table.
 

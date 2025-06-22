@@ -1,15 +1,15 @@
 ---
 id: 5
 title: Implement Transcript Retrieval Endpoint
-status: pending
+status: done
 priority: medium
 feature: Transcript Upload
 dependencies:
   - 2
 assigned_agent: null
 created_at: "2025-06-22T15:39:28Z"
-started_at: null
-completed_at: null
+started_at: "2025-06-22T15:45:00Z"
+completed_at: "2025-06-22T19:30:00Z"
 error_log: null
 ---
 
