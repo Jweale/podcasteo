@@ -99,7 +99,7 @@ CI (GitHub Actions) blocks merge on failing tests or lint.
 2. **Cloudflare Worker** – `pnpm deploy:api:stg` (Wrangler) → binds to R2 bucket `podcasteo-stg`.
 3. **RunPod GPU** – `docker push` image tag `:stg`, redeployed via Terraform.
 
-Promotion to prod uses GitHub Release labelled `v*.*.*` and matching GitHub Action.
+Promotion to prod uses GitHub Release labelled `v*.*.*` and matching GitHub Action.
 
 ---
 
@@ -128,6 +128,36 @@ Promotion to prod uses GitHub Release labelled `v*.*.*` and matching GitHub Act
 * ☕ Chat → #podcasteo‑dev on Slack.
 
 Happy hacking—and welcome aboard!
+
+---
+
+## Testing Setup
+
+### 1. Create a Supabase Test Project
+- Go to [Supabase](https://app.supabase.com/) and create a new project dedicated for testing.
+- Set up the schema to match your production/development environment.
+- Obtain the API URL and anon/public key from the project settings.
+
+### 2. Configure Test Environment Variables
+- Create a `.env.test` file in the project root with the following (replace with your test project values):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-test-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-test-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-test-service-role-key
+# Add any other required env vars for your app
+```
+
+### 3. Running Tests
+- **Unit/Integration:**
+  - `npm run test`
+- **E2E (Playwright):**
+  - `npx playwright test`
+
+### 4. Notes
+- The test suites will use `.env.test` automatically if configured in your test runner setup.
+- Never use your production credentials for testing.
+- For local DB development, you can use the Supabase CLI to run a local instance if desired.
 
 ---
 

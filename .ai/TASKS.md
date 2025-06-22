@@ -19,6 +19,6 @@
 > Dependencies: 2
 > Create the `GET /jobs/{id}/transcript` endpoint to allow retrieval of stored transcripts from the `transcripts` table.
 
-- [ ] **ID 6: End-to-End Testing and Validation** (Priority: high)
+- [x] **ID 6: End-to-End Testing and Validation** (Priority: high)
 > Dependencies: 1, 2, 3, 4, 5
 > Write and execute tests to ensure the upload, validation, storage, and retrieval of transcripts work as specified, including edge cases for file size, type, and word count.

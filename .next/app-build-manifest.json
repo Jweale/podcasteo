@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/upload/page": [
+    "/api/jobs/[id]/transcript/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/upload/page.js"
+      "static/chunks/app/api/jobs/[id]/transcript/route.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",

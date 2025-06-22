@@ -21,9 +21,12 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "types": ["jest", "node", "@testing-library/jest-dom", "@playwright/test"]
   },
   "include": [
+    "app",
+    "tests",
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
