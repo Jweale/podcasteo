@@ -1,0 +1,72 @@
+# Podcasteo API Contract – v0.2    
+*Transcript-Only MVP*  
+_Last updated 22 Jun 2025_
+
+> **Scope:** endpoints for the bootstrap release where users supply a finished
+> transcript.  
+> All audio-ingestion routes from v0.1 are retained verbatim in
+> **Appendix A**.
+
+Base URL (prod) https://api.podcasteo.ai/v1/
+Base URL (stg) https://stg-api.podcasteo.ai/v1/
+
+
+---
+
+## 1 · Authentication (unchanged)
+*JWT bearer or API key in `Authorization: Bearer …`.*
+
+---
+
+## 2 · Error Envelope (unchanged)
+
+```json
+{ "error": { "code": "INVALID_BODY", "message": "Transcript missing" } }
+3 · Resources & End-points (Transcript-Only)
+3.1 Jobs
+Method & Path	Purpose	Body / Params	Response
+POST /jobs	Submit a new transcript for processing	json<br>{<br> "title": "AI & SEO",<br> "transcript_md": "…",<br> "language": "en"<br>}	202 Accepted → { "job_id": "01HS…" }
+GET /jobs/{id}	Fetch job status + meta	–	200 OK → Job object
+GET /jobs	Cursor-list jobs	cursor, limit	200 OK → array
+
+jsonc
+
+
+// Job
+{
+  "id": "01HS0M…",
+  "title": "AI & SEO",
+  "state": "ready",      // queued|ready|error
+  "word_count": 8231,
+  "created_at": 1719051600,
+  "ready_at": 1719051655,
+  "error_msg": null
+}
+3.2 Assets
+GET Path	Returns
+/jobs/{id}/article	SEO-optimised Markdown
+/jobs/{id}/faq	JSON array Q/A
+/jobs/{id}/jsonld	PodcastEpisode JSON-LD
+/jobs/{id}/download.zip	Zipped bundle (all assets)
+
+3.3 Publishing & Usage (unchanged)
+POST /publish, GET /publish/{id}, GET /usage/current, GET /invoices.
+
+3.4 Webhooks (unchanged)
+job.ready, job.failed, publish.live.
+
+4 · Rate Limits (Starter)
+Group	Limit
+Job submit	60 jobs / day
+Asset fetch	120 req / minute
+
+5 · Data Model delta
+Transcript.text_md required. All audio-file fields removed for MVP.
+
+Appendix A – Future Audio-Ingestion End-points
+(full table from v0.1 preserved here)
+
+<!-- keep the long audio-ingest section exactly as written previously -->
+
+---
+

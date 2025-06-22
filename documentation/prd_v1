@@ -1,0 +1,123 @@
+
+
+## **`product_requirements_doc_prd.md`**
+
+```markdown
+# Product Requirements Document – Podcasteo v0.2  
+*Transcript-Only MVP*  
+_Last updated 22 Jun 2025_
+
+---
+
+## 1 · Purpose & Vision
+Podcasteo transforms existing **podcast transcripts** into fully-optimised,
+brand-safe pages that rank in Google and surface in generative engines,
+without adding writer headcount.
+
+---
+
+## 2 · Goals (updated)
+1. MVP live in < 6 weeks.  
+2. First 20 paying orgs processing ≥4 episodes / mo by Q4 2025.  
+3. ≥85 % gross margin on word-based pricing.
+
+---
+
+## 3 · Personas (condensed)
+* Head of Content (SaaS) – KPI’d on organic traffic.  
+* Agency Owner – packages repurposing into client offering.
+
+---
+
+## 4 · Problem Statement
+**Podcast insight is trapped**; raw transcripts or Spotify links don’t rank,
+so marketing teams waste 2–4 hrs/episode rewriting. Podcasteo automates that.
+
+---
+
+## 5 · Solution Overview – MVP
+
+| Step | Detail |
+|------|--------|
+| 1    | **Upload transcript** (`.md`, `.vtt`, plain). |
+| 2    | **Analyse**: embeddings → topic clusters → GPT-4o. |
+| 3    | **Generate**: 600–900 w article + FAQ + JSON-LD. |
+| 4    | **Review**: human toggles blocks; brand-safe scan. |
+| 5    | **Publish**: webhook to WordPress or MD download. |
+
+---
+
+## 6 · Functional Requirements (excerpt)
+
+## 6 · Key Features (Transcript-Only MVP)
+
+> Legend  **P0 = must-ship** **P1 = post-GA**  
+> All audio-ingestion features remain in *Appendix A*.
+
+| ID  | Title & Goal | Primary user story | Acceptance criteria | Notes & open questions |
+|-----|--------------|--------------------|---------------------|------------------------|
+| **F-1** | **Transcript upload**<br>Users can feed Podcasteo a transcript up to 15 000 words. | *As a content marketer, I want to drag-and-drop a `.md`, `.txt` or `.vtt` file (or paste plain text) so I can process an episode without extra tooling.* | 1. File ≤ 2 MB accepted.<br>2. Plain-text paste ≤ 15 k words accepted.<br>3. Invalid type/size → friendly error.<br>4. Job row created in `audio_jobs` with `state = queued`. | ✔️ Use `<input type="file" multiple={false}>` (no multipart streams needed).<br>✔️ Show running word counter on paste.<br>❓ Should we store raw text in Postgres or S3? — Decision: Postgres `TEXT` for ≤ 2 MB. |
+| **F-2** | **Topic extraction & clustering**<br>Turn transcript into a map of search intents. | *As a marketer, I want the system to identify key themes so the generated article covers what people actually search for.* | 1. Pipeline finishes in < 30 s for 10 k words.<br>2. Returns ≥ 3 topic clusters, each ≥ 2 keywords.<br>3. Topics stored in `topics` table for later analytics. | GPT-4o embeddings (`text-embedding-3-small`) → cosine-similarity cluster. |
+| **F-3** | **LLM drafting**<br>Generate summary article (600-900 w), FAQ (5+ Q/A) and pull-quotes. | *As a marketer, I want publish-ready copy so I skip manual summarising.* | 1. Output Markdown has H-tags, bullet lists, ≤ 900 words.<br>2. At least one FAQ entry per cluster.<br>3. Pull-quotes include speaker name + timestamp if supplied.<br>4. LLM run cost ≤ 40 k tokens. | Use system prompt “brand-safe, B2B SaaS tone.” |
+| **F-4** | **Brand-safety & tone guard** | *As a brand manager, I need reassurance no profanity or negative sentiment sneaks into live copy.* | 1. Profanity list (George Carlin + client blacklist) triggers flag.<br>2. Overall sentiment score returned (-1 ↔ +1).<br>3. Blocked output prevented from publishing without user override. | Quick heuristic: regex for profanity + OpenAI moderation endpoint. |
+| **F-5** | **Human review UI** | *As an editor, I want a toggle switch for each block so I can curate before publish.* | 1. Editor can hide/show blocks; state is persisted.<br>2. ‘Approve & publish’ disabled until at least one article body is visible.<br>3. Autosave every 10 s. | Front-end: React + Radix Tabs; state in `draft_changes` table. |
+| **F-6** | **CMS publish** | *As a marketer, I want one-click publish to my WordPress site with correct schema and canonical URL.* | 1. Valid WP creds → 201 Created, returns post ID.<br>2. JSON-LD injected in `<script type="application/ld+json">`.<br>3. Canonical points to canonical episode URL from form.<br>4. Fallback: Markdown `.md` download triggers. | Ghost integration P1; fallback zip always available. |
+| **F-7** | **Billing & usage metering** | *As an owner, I want to pay by words processed so cost scales with output.* | 1. Stripe metered usage item updated nightly from `usage_events`.<br>2. Dashboard shows remaining free words.<br>3. Hard stop at +10 % over allowance. | Free tier: 15 k words/mo. Paid: \$0.002/word. |
+| **F-8** | **Traffic analytics (P1)** | *As a marketer, I want to see which generated pages rank so I can justify spend.* | 1. GSC API pull populates keyword/impression chart.<br>2. ‘Rewrite’ suggestion when clicks drop 30 % over 60 d. | Optional for GA+3 months. |
+
+---
+
+### Non-functional requirements (shared)
+
+| Area | Requirement | Metric |
+|------|-------------|--------|
+| **Perf** | LLM pipeline completes in < 45 s p95 for 15 k words | Tracked via Vercel Edge logs |
+| **Security** | All data in transit TLS1.2+, rest AES-256 | Compliance checklist |
+| **Reliability** | Job success rate ≥ 99 % | Logged failures / total |
+| **Cost guard** | Token spend / job ≤ \$0.35 at 15 k words | CloudWatch metric |
+
+---
+
+*Everything related to audio upload, GPU transcription, R2 hot storage, desktop recorder, etc. remains intact in **Appendix A – Future Road-map: Audio Ingestion**.*
+
+
+*(All transcription/GPU items moved to Appendix A.)*
+
+---
+
+## 7 · Tech Stack
+See `tech_stack_v1' 
+
+---
+
+## 8 · Milestones (high-level)
+
+| Milestone | Target date |
+|-----------|-------------|
+| Alpha internal | 3 weeks |
+| Beta (5 design partners) | 5 weeks |
+| Public launch | 6 weeks |
+
+---
+
+## 9 · Success Metrics
+* Time saved per episode (survey).  
+* % of generated pages that rank top-30 within 60 days.  
+* Net dollar retention >110 %.
+
+---
+
+## 10 · Risks & Mitigations
+| Risk | Mitigation |
+|------|------------|
+| LLM hallucination | safety layer + human review default |
+| Google spam update | helpful-content checklist, unique insights |
+| Low adoption | price per word, agency outreach |
+
+---
+
+## Appendix A – Future Road-map: Audio Ingestion (verbatim from v0.1)
+
+*All GPU queue, R2 storage, desktop recorder, pricing tiers,
+and extended milestones retained here.*
+
