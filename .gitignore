@@ -1,6 +1,22 @@
 # Ignore secrets
 documentation/secrets/
 
+# build output
+.next/
+out/
+dist/
+build/
+.cache/
+.turbo/
+.output/
+
+# misc
+.DS_Store
 .env
-node_modules
-node_modules/
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.bfg-report/
