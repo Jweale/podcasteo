@@ -1,4 +1,17 @@
+import { Inter, Caprasimo } from 'next/font/google';
 import './globals.css';
+import PodcasteoHeader from './components/PodcasteoHeader';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+const caprasimo = Caprasimo({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-caprasimo',
+});
 
 export const metadata = {
   title: 'Next.js',
@@ -11,8 +24,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={`${inter.variable} ${caprasimo.variable}`}>
+      <body>
+        <PodcasteoHeader />
+        <main>{children}</main>
+      </body>
     </html>
   )
 }
