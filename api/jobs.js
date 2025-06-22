@@ -28,11 +28,12 @@ export default async function handler(req, res) {
 
     // Generate a ULID for the job id
     const jobId = ulid();
+    const orgId = 'demo-org'; // Hardcoded for testing/demo
 
     // Create job
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .insert([{ id: jobId, title, language, state: 'queued', word_count: wordCount }])
+      .insert([{ id: jobId, org_id: orgId, title, language, state: 'queued', word_count: wordCount }])
       .select()
       .single();
 
