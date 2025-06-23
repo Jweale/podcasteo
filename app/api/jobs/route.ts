@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { ulid } from 'ulid';
+import { extractAndStoreTopicsFromTranscript } from '@/app/lib/topicExtraction';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
     // Generate a ULID for the job id
     const jobId = ulid();
     const orgId = 'demo-org'; // Hardcoded for testing/demo
-    const createdAt = Math.floor(Date.now() / 1000); // Unix timestamp in seconds
+    const createdAt = new Date().toISOString(); // Use ISO string for timestamptz
 
     // Create job
     const { error: jobError } = await supabase
@@ -45,6 +46,23 @@ export async function POST(req: NextRequest) {
     if (transcriptError) {
       return NextResponse.json({ error: transcriptError.message }, { status: 500 });
     }
+
+    // Trigger topic extraction pipeline in the background
+    setImmediate(async () => {
+      try {
+        await extractAndStoreTopicsFromTranscript({
+          transcript: text_md,
+          job_id: jobId,
+          org_id: orgId,
+          // user_id: null, // Add user_id if available
+        });
+        await supabase.from('jobs').update({ state: 'ready' }).eq('id', jobId);
+        console.log(`[Job ${jobId}] Topic extraction complete.`);
+      } catch (err) {
+        await supabase.from('jobs').update({ state: 'error', error_msg: String(err) }).eq('id', jobId);
+        console.error(`[Job ${jobId}] Topic extraction failed:`, err);
+      }
+    });
 
     return NextResponse.json({ job_id: jobId }, { status: 201 });
   } catch (err: any) {
