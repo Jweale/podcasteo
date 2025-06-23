@@ -21,8 +21,8 @@ const UploadForm = () => {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [success, setSuccess] = useState<string>('');
-    const [activeTab, setActiveTab] = useState('file');
-    const [canonicalUrl, setCanonicalUrl] = useState('');
+  const [activeTab, setActiveTab] = useState('file');
+  const [canonicalUrl, setCanonicalUrl] = useState('');
 
     const handleFileChange = (uploadedFile: File | null) => {
         setError('');
@@ -59,7 +59,7 @@ const UploadForm = () => {
         if (words.length > MAX_WORDS) {
             setError('Text exceeds 15,000 word limit.');
         }
-    };
+  };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -87,20 +87,20 @@ const UploadForm = () => {
             } catch (err) {
                 setError('Failed to read file.');
                 setLoading(false);
-                return;
-            }
+      return;
+    }
         } else if (text) {
             if (wordCount > MAX_WORDS) {
                 setError('Text exceeds 15,000 word limit.');
                 setLoading(false);
-                return;
-            }
+      return;
+    }
             payload.text_md = text;
         } else {
             setError('Please upload a file or paste transcript text.');
             setLoading(false);
-            return;
-        }
+      return;
+    }
 
         try {
             const res = await fetch('/api/jobs', {
@@ -122,7 +122,7 @@ const UploadForm = () => {
         } finally {
             setLoading(false);
         }
-    };
+  };
 
     const isSubmitDisabled =
         loading ||
@@ -131,66 +131,66 @@ const UploadForm = () => {
         error !== '';
 
 
-    return (
-        <Card className="shadow-lg border-0">
-            <CardContent className="p-8">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-                    <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg">
-                        <TabsTrigger
-                            value="file"
+  return (
+    <Card className="shadow-lg border-0">
+      <CardContent className="p-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg">
+            <TabsTrigger 
+              value="file" 
                             className="data-[state=active]:bg-white data-[state=active]:text-brand-primary data-[state=active]:shadow-sm font-medium data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-500"
-                        >
-                            📄 Upload File
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="text"
+            >
+              📄 Upload File
+            </TabsTrigger>
+            <TabsTrigger 
+              value="text" 
                             className="data-[state=active]:bg-white data-[state=active]:text-brand-primary data-[state=active]:shadow-sm font-medium data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-500"
-                        >
-                            📝 Paste Text
-                        </TabsTrigger>
-                    </TabsList>
+            >
+              📝 Paste Text
+            </TabsTrigger>
+          </TabsList>
 
-                    <TabsContent value="file" className="space-y-6">
+          <TabsContent value="file" className="space-y-6">
                         <FileUploadArea onFileUpload={handleFileChange} error={error} />
-                    </TabsContent>
+          </TabsContent>
 
-                    <TabsContent value="text" className="space-y-6">
+          <TabsContent value="text" className="space-y-6">
                         <TextPasteArea onTextChange={handleTextChange} error={error} />
                         <div>Word count: {wordCount}</div>
-                    </TabsContent>
+          </TabsContent>
 
-                    <div className="space-y-6 pt-4 border-t border-gray-200">
-                        <UrlInputField
-                            value={canonicalUrl}
-                            onChange={setCanonicalUrl}
-                            error={error}
-                        />
+          <div className="space-y-6 pt-4 border-t border-gray-200">
+            <UrlInputField 
+              value={canonicalUrl} 
+              onChange={setCanonicalUrl}
+              error={error}
+            />
 
-                        {error && <ErrorMessage message={error} />}
+            {error && <ErrorMessage message={error} />}
                         {success && <div style={{ color: 'green', marginTop: 8 }}>{success}</div>}
 
 
-                        <div className="flex justify-center">
-                            <Button
+            <div className="flex justify-center">
+              <Button 
                                 onClick={handleSubmit}
                                 disabled={isSubmitDisabled}
-                                className="px-12 py-3 text-lg font-semibold bg-brand-primary hover:bg-brand-primary/90 text-white"
-                            >
+                className="px-12 py-3 text-lg font-semibold bg-brand-primary hover:bg-brand-primary/90 text-white"
+              >
                                 {loading ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                                        Processing...
-                                    </>
-                                ) : (
-                                    'Process Transcript'
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </Tabs>
-            </CardContent>
-        </Card>
-    );
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    Processing...
+                  </>
+                ) : (
+                  'Process Transcript'
+                )}
+              </Button>
+            </div>
+          </div>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default UploadForm;

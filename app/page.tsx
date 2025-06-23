@@ -1,12 +1,8 @@
 import React from 'react';
-import Dashboard from './components/Dashboard';
+import LandingPage from './components/LandingPage';
 
-const Index: React.FC = () => {
-  return (
-    <div>
-      <Dashboard />
-    </div>
-  );
+const Home: React.FC = () => {
+  return <LandingPage />;
 };
 
-export default Index; 
+export default Home; 
