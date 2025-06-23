@@ -26,18 +26,18 @@
 - [x] **ID 7: Design and Update Database Schema for Topic Storage** (Priority: high)
 > Define and migrate the `topics` table schema to support storage of clustered topics and keywords linked to transcripts/jobs.
 
-- [ ] **ID 8: Implement Embedding and Clustering Pipeline** (Priority: critical)
+- [x] **ID 8: Implement Embedding and Clustering Pipeline** (Priority: critical)
 > Dependencies: 7
 > Build the core logic to segment transcripts, generate embeddings, cluster segments into topics, and extract representative keywords.
 
-- [ ] **ID 9: Integrate Topic Extraction Pipeline with Transcript Upload Flow** (Priority: high)
+- [x] **ID 9: Integrate Topic Extraction Pipeline with Transcript Upload Flow** (Priority: high)
 > Dependencies: 8
 > Ensure the topic extraction pipeline is triggered after transcript upload and results are stored appropriately.
 
-- [ ] **ID 10: Store and Expose Topic Clusters for Downstream Use** (Priority: high)
+- [x] **ID 10: Store and Expose Topic Clusters for Downstream Use** (Priority: high)
 > Dependencies: 8
 > Persist topic clusters in the database and provide an API endpoint for retrieval by other services or the frontend.
 
-- [ ] **ID 11: Test Performance and Accuracy on Sample Transcripts** (Priority: medium)
+- [x] **ID 11: Test Performance and Accuracy on Sample Transcripts** (Priority: medium)
 > Dependencies: 8, 9, 10
 > Benchmark the pipeline, validate clustering quality, and handle edge cases with various transcript types and sizes.
